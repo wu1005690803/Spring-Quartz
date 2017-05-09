@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="exampleJob" class="com.test.ExampleJob"></bean>
+    <!-- JobDetail 工作任务的配置-->
+    <bean id="exampleJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 指定任务类 -->
+        <property name="targetObject" ref="exampleJob" />
+        <!-- 指定任务执行的方法 -->
+        <property name="targetMethod" value="execute" />
+    </bean>
+   <!-- Trigger触发器-->
+    <bean id="exampleJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="exampleJobDetail"></property>
+        <property name="cronExpression" value="0/10 * * * * ?" />
+    </bean>
+    <!--SchedulerFactoryBean调度器-->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+               <!--ref 触发器-->
+                <ref bean="exampleJobTrigger"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>
